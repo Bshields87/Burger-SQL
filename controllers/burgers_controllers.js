@@ -13,15 +13,19 @@ router.get("/", function (req, res) {
         res.render("index", { burgers })
     });
 });
-
+ router.get("/api/burger", function (req, res){
+     burger.all(function(burgers){
+         console.log(burgers);
+         res.render(burgers)
+     });
+ });
 router.post("/api/burgers", function (req, res) {
     burger.create(["burger_name", "devoured"],
         [req.body.name, req.body.devoured],
 
         function (result) {
             res.json({ id: result.insertId });
-            console.log(result());
-            console.log("hi" + req.body.devoured);
+           
         });
 
 console.log(req.body.name);
