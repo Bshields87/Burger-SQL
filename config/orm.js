@@ -24,11 +24,11 @@ function objToSql(ob) {
         if (Object.hasOwnProperty.call(ob, key)) {
             // if string with spaces, add quotations (Lana Del Grey => 'Lana Del Grey')
             if (typeof value === "string" && value.indexOf(" ") >= 0) {
-                value = "'" + value + "'";
+                value = "' " + value + " '";
             }
             // e.g. {name: 'Lana Del Grey'} => ["name='Lana Del Grey'"]
             // e.g. {sleepy: true} => ["sleepy=true"]
-            arr.push(key + "=" + value);
+            arr.push(key + " = " + value);
         }
     }
 
@@ -47,18 +47,18 @@ var orm = {
         });
     },
     create: function (table, cols, vals, cb) {
-        var queryString = "INSERT INTO" + table;
+        var queryString = "INSERT INTO " + table ;
 
         queryString += " (";
         queryString += cols.toString();
         queryString += ") ";
         queryString += "VALUES (";
         queryString +=  printQuestionMarks(vals.length);
-        queryString += ") ";
+        queryString += ") ;";
 
         console.log(queryString);
 
-        connection.query(queryString, val, function (err, result) {
+        connection.query(queryString, vals, function (err, result) {
             if (err) {
                 throw err;
             }
@@ -68,12 +68,12 @@ var orm = {
     update: function (table, objColVals, condition, cb) {
         var queryString = "UPDATE " + table;
 
-        queryString += "SET ";
+        queryString += " SET ";
         //need to create function for objtosql
         queryString += objToSql(objColVals);
         queryString += " WHERE ";
-        queryString += condition;
-
+        queryString += condition + " ; ";
+        console.log(objToSql(objColVals));
         console.log(queryString);
         connection.query(queryString, function (err, result) {
             if (err) {
